@@ -185,34 +185,36 @@ bookingForm.addEventListener(
    SIMPLE IMAGE FADE-IN
    Images load hone par smooth appearance
 ===================================================== */
+/* =====================================================
+   IMAGE GALLERY FADE-IN
+===================================================== */
 
-const galleryImages =
-    document.querySelectorAll(
-        ".gallery img"
-    );
-
+const galleryImages = document.querySelectorAll(".gallery img");
 
 galleryImages.forEach(function (image) {
 
-    image.style.opacity = "0";
+    image.style.transition =
+        "opacity .6s ease, transform .6s ease";
 
     image.style.transform =
         "translateY(10px)";
 
+    function showImage() {
+        image.style.opacity = "1";
+        image.style.transform = "translateY(0)";
+    }
 
-    image.addEventListener(
-        "load",
-        function () {
+    // Already loaded image
+    if (image.complete) {
+        showImage();
+    } else {
+        image.addEventListener("load", showImage);
+    }
 
-            image.style.transition =
-                "opacity .6s ease, transform .6s ease";
-
-            image.style.opacity = "1";
-
-            image.style.transform =
-                "translateY(0)";
-
-        }
-    );
+    // Image loading error
+    image.addEventListener("error", function () {
+        image.style.opacity = "1";
+        console.log("Gallery image not found:", image.src);
+    });
 
 });
